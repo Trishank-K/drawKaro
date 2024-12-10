@@ -1,7 +1,15 @@
 import { atom } from "recoil";
 
-const canvasRefState = atom<HTMLCanvasElement | null>({
-  key: "canvas",
+const backgroundCanvas = atom<HTMLCanvasElement | null>({
+  key: "bgcanvas",
+  default: null,
+});
+const previewCanvas = atom<HTMLCanvasElement | null>({
+  key: "prcanvas",
+  default: null,
+});
+const finalCanvas = atom<HTMLCanvasElement | null>({
+  key: "fincanvas",
   default: null,
 });
 const toolState = atom<number | string>({
@@ -29,12 +37,24 @@ const isDragging = atom<boolean>({
   default: false,
 });
 const dragEndX = atom<number>({
-  key:"dragEndx",
-  default: 0
-})
+  key: "dragEndx",
+  default: 0,
+});
 const dragEndY = atom<number>({
-  key:"dragEndY",
-  default: 0
-})
+  key: "dragEndY",
+  default: 0,
+});
 
-export { canvasRefState, toolState, offsetX, offsetY, dragStartX, dragStartY, isDragging, dragEndX, dragEndY };
+export {
+  backgroundCanvas,
+  previewCanvas,
+  finalCanvas,
+  toolState,
+  offsetX,
+  offsetY,
+  dragStartX,
+  dragStartY,
+  isDragging,
+  dragEndX,
+  dragEndY,
+};
