@@ -1,6 +1,6 @@
 const drawGrid = (
   canvas: HTMLCanvasElement | null,
-  gridSize: number,
+  gridSize: number = 50,
   offsetX: number = 0,
   offsetY: number = 0,
   color: string = "lightgrey"
@@ -12,23 +12,25 @@ const drawGrid = (
   const { width, height } = canvas;
 
   ctx.clearRect(0, 0, width, height);
-  ctx.save();
-  ctx.translate(-offsetX, -offsetY);
 
   ctx.strokeStyle = color;
-  for (let x = 0; x <= width; x += gridSize) {
+
+  const startX = -offsetX % gridSize;
+  const startY = -offsetY % gridSize;
+
+  for (let x = startX; x <= width; x += gridSize) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, height);
     ctx.stroke();
   }
-  for (let y = 0; y <= height; y += gridSize) {
+
+  for (let y = startY; y <= height; y += gridSize) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(width, y);
     ctx.stroke();
   }
-  ctx.restore();
 };
 
 export { drawGrid };

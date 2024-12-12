@@ -4,18 +4,21 @@ import {
   backgroundCanvas,
   previewCanvas,
   finalCanvas,
+  toolState,
 } from "@/atoms/canvasAtoms";
 import Toolbar from "./toolbar";
 import { useEffect, useRef, useState } from "react";
 import { drawGrid } from "@/functions/drawGrid";
 import { usePanning } from "@/hooks/usePanning";
 import { offsetX, offsetY } from "@/atoms/canvasAtoms";
+import rough from "roughjs";
+import { useDraw } from "@/hooks/useDraw";
 
 export default function Canvas() {
   const [bgCanvas, setBgCanvas] = useRecoilState(backgroundCanvas);
   const [prCanvas, setPrCanvas] = useRecoilState(previewCanvas);
   const [finCanvas, setFinCanvas] = useRecoilState(finalCanvas);
-
+  const selectedTool = useRecoilValue(toolState);
   const bgCanvasRef = useRef(null);
   const prCanvasRef = useRef(null);
   const finCanvasRef = useRef(null);
@@ -37,10 +40,12 @@ export default function Canvas() {
     setFinCanvas(finCanvasRef.current);
   }, [bgCanvasRef, prCanvasRef, finCanvasRef]);
 
+  
   useEffect(() => {
     drawGrid(bgCanvas, 50, offX, offY, "white");
-  }, [bgCanvas, offX, offY]);
-
+  }, [bgCanvas, prCanvas, offX, offY]);
+  
+  useDraw();
   usePanning();
 
   return (
@@ -53,16 +58,16 @@ export default function Canvas() {
         className="absolute z-0"
       />
       <canvas
-        ref={prCanvasRef}
+        ref={finCanvasRef}
         width={canvasWidth}
         height={canvasHeight}
         className="absolute z-1"
       />
       <canvas
-        ref={finCanvasRef}
+        ref={prCanvasRef}
         width={canvasWidth}
         height={canvasHeight}
-        className="absolute z-2"
+        className="absolute z-2 pointer-events-auto"
       />
     </div>
   );

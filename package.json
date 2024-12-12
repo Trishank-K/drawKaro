@@ -13,7 +13,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.4.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "roughjs": "^4.6.6"
   },
   "devDependencies": {
     "typescript": "^5",

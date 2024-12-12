@@ -12,6 +12,10 @@ const finalCanvas = atom<HTMLCanvasElement | null>({
   key: "fincanvas",
   default: null,
 });
+const items = atom<HTMLCanvasElement | null>({
+  key:"items",
+  default: null
+})
 const toolState = atom<number | string>({
   key: "tools",
   default: "H",
@@ -49,6 +53,7 @@ export {
   backgroundCanvas,
   previewCanvas,
   finalCanvas,
+  items,
   toolState,
   offsetX,
   offsetY,
