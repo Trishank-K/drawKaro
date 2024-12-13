@@ -1,24 +1,21 @@
 "use client";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   backgroundCanvas,
   previewCanvas,
   finalCanvas,
-  toolState,
 } from "@/atoms/canvasAtoms";
 import Toolbar from "./toolbar";
 import { useEffect, useRef, useState } from "react";
 import { drawGrid } from "@/functions/drawGrid";
 import { usePanning } from "@/hooks/usePanning";
 import { offsetX, offsetY } from "@/atoms/canvasAtoms";
-import rough from "roughjs";
 import { useDraw } from "@/hooks/useDraw";
 
 export default function Canvas() {
   const [bgCanvas, setBgCanvas] = useRecoilState(backgroundCanvas);
   const [prCanvas, setPrCanvas] = useRecoilState(previewCanvas);
-  const [finCanvas, setFinCanvas] = useRecoilState(finalCanvas);
-  const selectedTool = useRecoilValue(toolState);
+  const setFinCanvas = useSetRecoilState(finalCanvas);
   const bgCanvasRef = useRef(null);
   const prCanvasRef = useRef(null);
   const finCanvasRef = useRef(null);
@@ -42,7 +39,7 @@ export default function Canvas() {
 
   
   useEffect(() => {
-    drawGrid(bgCanvas, 50, offX, offY, "white");
+    drawGrid(bgCanvas, 100, offX, offY, "white");
   }, [bgCanvas, prCanvas, offX, offY]);
   
   useDraw();
