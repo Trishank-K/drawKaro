@@ -21,7 +21,6 @@ const usePanning = () => {
 
   useEffect(() => {
     if (!prCanvas || selectedTool !== "H") return;
-
     const handleMouseDown = (e: MouseEvent) => {
       setDragging(true);
       setStartDragX(offX + e.clientX);
@@ -32,7 +31,6 @@ const usePanning = () => {
       if (dragging) {
         const newOffsetX = startDragX - e.clientX;
         const newOffsetY = startDragY - e.clientY;
-        console.log("OffsetX:", newOffsetX, "OffsetY:", newOffsetY);
         setOffX(newOffsetX);
         setOffY(newOffsetY);
       }

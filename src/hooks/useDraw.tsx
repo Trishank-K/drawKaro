@@ -1,5 +1,5 @@
 import {
-  isDragging,
+  finalCanvas,
   offsetX,
   offsetY,
   previewCanvas,
@@ -25,21 +25,24 @@ interface shape {
 
 function useDraw() {
   const [prCanvas, setPrCanvas] = useRecoilState(previewCanvas);
+  const [finCavas, setFinCanvas] = useRecoilState(finalCanvas);
   const selectedTool = useRecoilValue(toolState);
   const offX = useRecoilValue(offsetX);
   const offY = useRecoilValue(offsetY);
-  const [startDrawX, setStartDrawX] = useState(0);
-  const [startDrawY, setStartDrawY] = useState(0);
-  const [endDrawX, setEndDrawX] = useState(0);
-  const [endDrawY, setEndDrawY] = useState(0);
-  const [isDrawing, setIsDrawing] = useState(false);
+  let startDrawX = 0;
+  let startDrawY = 0;
+  let endDrawX = 0;
+  let endDrawY = 0;
+  let isDrawing = false;
   const [element, setElements] = useState<shape[]>([]);
 
   const reDrawElements = () => {
-    if (prCanvas) {
-      let rc = rough.canvas(prCanvas);
-      let ctx = prCanvas.getContext("2d");
-      ctx?.clearRect(0, 0, prCanvas.width, prCanvas.height);
+    console.log("REDRAW CALLED");
+    if (finCavas) {
+      console.log("REDRAWING: ",element);
+      let rc = rough.canvas(finCavas);
+      let ctx = finCavas.getContext("2d");
+      ctx?.clearRect(0, 0, finCavas.width, finCavas.height);
       ctx?.save();
       let generator = rc.generator;
       element.forEach((l) => {
@@ -58,35 +61,36 @@ function useDraw() {
 
   const drawLine = (x1:number,y1:number,x2:number,y2:number)=>{
     if(prCanvas)  {
-      let rc = rough.canvas(prCanvas)
+      let rc = rough.canvas(prCanvas);
       let ctx = prCanvas.getContext("2d");
       let generator = rc.generator;
       let line = generator.line(x1,y1,x2,y2,{strokeWidth:4, stroke:"white"});
       rc.draw(line);
     }
   }
-  useEffect(reDrawElements,[offX,offY,prCanvas]);
+  useEffect(reDrawElements,[offX,offY,element]);
 
   useEffect(() => {
     if (!prCanvas || selectedTool !== 7) return;
     const handleMouseDown = (e: MouseEvent) => {
-      setIsDrawing(true);
-      setStartDrawX(e.clientX + offX);
-      setStartDrawY(e.clientY + offY);
+      isDrawing = true;
+      startDrawX = (e.clientX + offX);
+      startDrawY = (e.clientY + offY);
       console.log("HEHE")
     };
+
     const handleMouseMove = (e: MouseEvent) => {
-      if(isDrawing)  {
+      if(isDrawing && prCanvas)  {
         console.log("HEHE2")
-        setEndDrawX(e.clientX + offX);
-        setEndDrawY(e.clientY + offY);
-        reDrawElements();
-        drawLine(startDrawX,startDrawY,endDrawX,endDrawY);
+        endDrawX = (e.clientX + offX);
+        endDrawY = (e.clientY + offY);
+        prCanvas.getContext("2d")?.clearRect(0,0,prCanvas.width,prCanvas.height);
+        drawLine(startDrawX,startDrawY,e.clientX+offX,e.clientY+offY);
       }
     };
     const handleMouseUp = (e: MouseEvent) => {
       console.log("HEHE3")
-      setIsDrawing(false);
+      isDrawing = false;
       const el : shape = {
         name:"line",
         properties:{
@@ -100,7 +104,9 @@ function useDraw() {
           }
         }
       }
-      setElements((element)=>[...element,el])
+      console.log("Element: ",element);
+      setElements((element)=>{ return [...element,el]})
+      prCanvas.getContext("2d")?.clearRect(0,0,prCanvas.width,prCanvas.height);
     };
 
     prCanvas.addEventListener("mousemove", handleMouseMove);
@@ -114,22 +120,6 @@ function useDraw() {
     };
   }, [prCanvas, selectedTool, startDrawX, startDrawY, isDrawing, offX, offY]);
 
-  useEffect(() => {
-    const initialLine: shape = {
-      name: "line",
-      properties: {
-        x1: 60,
-        y1: 60,
-        x2: 190,
-        y2: 60,
-        options: {
-          strokeWidth: 5,
-          stroke: "white",
-        },
-      },
-    };
-    setElements([initialLine]);
-  }, []);
 }
 
 export { useDraw };
