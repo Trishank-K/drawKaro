@@ -1,6 +1,7 @@
-import { Line, Rectangle, shape } from "@/packages/types";
+import { FreeStyle, Line, Rectangle, shape } from "@/packages/types";
 import { drawLine } from "./drawLine";
 import { drawRectangle } from "./drawRectangle";
+import { drawFreeStyle } from "./drawFreeStyle";
 
 const drawElements = (
   element: shape[],
@@ -40,6 +41,10 @@ const drawElements = (
             canvas
           );
         } break;
+        case "FreeStyle": {
+          const {points, options} = element.properties as FreeStyle;
+          drawFreeStyle({points,options},canvas);
+        }
       }
     });
   }

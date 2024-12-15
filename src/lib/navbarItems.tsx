@@ -3,8 +3,9 @@ import { LuDiamond } from "react-icons/lu";
 import { FaRegHandPaper } from "react-icons/fa";
 import { GoDash } from "react-icons/go";
 import { FiMousePointer } from "react-icons/fi";
+import { HiOutlinePencil } from "react-icons/hi";
 interface itemsType {
-  button: number|string;
+  button: number | string;
   figure: string;
   icon: JSX.Element;
 }
@@ -29,6 +30,11 @@ const items: itemsType[] = [
     button: 3,
     figure: "Diamond",
     icon: <LuDiamond />,
+  },
+  {
+    button: 4,
+    figure: "FreeStyle",
+    icon: <HiOutlinePencil />,  
   },
   {
     button: 7,

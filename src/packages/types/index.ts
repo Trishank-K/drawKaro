@@ -1,3 +1,5 @@
+import { Point } from "roughjs/bin/geometry";
+
 interface Line {
     x1: number;
     y1: number;
@@ -21,9 +23,17 @@ interface Rectangle {
     };
 }
 
-interface shape {
-    name: "Line" | "Rectangle",
-    properties: Line | Rectangle
+interface FreeStyle {
+    points: Point[] | Point[][];
+    options?: {
+        strokeWidth?: number;
+        stroke?: string
+    }
 }
 
-export type {Line, Rectangle, shape}
+interface shape {
+    name: "Line" | "Rectangle" | "FreeStyle",
+    properties: Line | Rectangle | FreeStyle
+}
+
+export type {Line, Rectangle, FreeStyle, shape}

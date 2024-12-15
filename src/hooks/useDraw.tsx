@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { shape } from "@/packages/types";
 import { drawElements } from "@/functions/drawElements";
+import { Point } from "roughjs/bin/geometry";
 
 function useDraw() {
   const prCanvas = useRecoilValue(previewCanvas);
@@ -24,7 +25,7 @@ function useDraw() {
   const endDrawYRef = useRef(0);
   const isDrawingRef = useRef(false);
   const shapeRef = useRef<shape | null>(null);
-
+  const pointsRef = useRef<Point[] | null>(null);
   const [element, setElements] = useState<shape[]>([]);
 
   useEffect(() => {
@@ -43,6 +44,9 @@ function useDraw() {
       isDrawingRef.current = true;
       startDrawXRef.current = e.clientX + offX;
       startDrawYRef.current = e.clientY + offY;
+      if (tool === "FreeStyle") {
+        pointsRef.current = [[e.clientX + offX, e.clientY + offY]];
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -72,6 +76,16 @@ function useDraw() {
               height: e.clientY + offY - startDrawYRef.current,
             },
           } as shape;
+        } else if (tool === "FreeStyle") {
+          if (pointsRef.current) {
+            pointsRef.current.push([e.clientX + offX, e.clientY + offY]);
+            shapeRef.current = {
+              name: "FreeStyle",
+              properties: {
+                points: pointsRef.current,
+              },
+            };
+          }
         }
         if (shapeRef.current) {
           drawElements([shapeRef.current], prCanvas, offX, offY);
