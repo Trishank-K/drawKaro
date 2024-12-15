@@ -12,27 +12,27 @@ interface itemsType {
 const items: itemsType[] = [
   {
     button: "H",
-    figure: "hand",
+    figure: "Hand",
     icon: <FaRegHandPaper />,
   },
   {
     button: 1,
-    figure: "pointer",
+    figure: "Pointer",
     icon: <FiMousePointer />,
   },
   {
     button: 2,
-    figure: "rectangle",
+    figure: "Rectangle",
     icon: <LuRectangleHorizontal />,
   },
   {
     button: 3,
-    figure: "diamond",
+    figure: "Diamond",
     icon: <LuDiamond />,
   },
   {
     button: 7,
-    figure: "line",
+    figure: "Line",
     icon: <GoDash />,
   },
 ];

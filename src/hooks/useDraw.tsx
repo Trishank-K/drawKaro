@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { shape } from "@/packages/types";
 import { drawElements } from "@/functions/drawElements";
-import { drawLine } from "@/functions/drawLine";
 
 function useDraw() {
   const prCanvas = useRecoilValue(previewCanvas);
@@ -17,18 +16,19 @@ function useDraw() {
   const selectedTool = useRecoilValue(toolState);
   const offX = useRecoilValue(offsetX);
   const offY = useRecoilValue(offsetY);
+  const tool = useRecoilValue(toolState);
 
   const startDrawXRef = useRef(0);
   const startDrawYRef = useRef(0);
   const endDrawXRef = useRef(0);
   const endDrawYRef = useRef(0);
   const isDrawingRef = useRef(false);
+  const shapeRef = useRef<shape | null>(null);
 
   const [element, setElements] = useState<shape[]>([]);
 
   useEffect(() => {
     if (finCanvas) {
-      console.log("FIN CANVAS DRAW");
       finCanvas
         .getContext("2d")
         ?.clearRect(0, 0, finCanvas.width, finCanvas.height);
@@ -37,52 +37,54 @@ function useDraw() {
   }, [offX, offY, element, finCanvas]);
 
   useEffect(() => {
-    if (!prCanvas || selectedTool !== 7) return;
+    if (!prCanvas || selectedTool === "Hand") return;
 
     const handleMouseDown = (e: MouseEvent) => {
       isDrawingRef.current = true;
       startDrawXRef.current = e.clientX + offX;
       startDrawYRef.current = e.clientY + offY;
-      console.log("HEHE");
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       if (isDrawingRef.current && prCanvas) {
-        console.log("HEHE2");
         endDrawXRef.current = e.clientX + offX;
         endDrawYRef.current = e.clientY + offY;
         prCanvas
           .getContext("2d")
           ?.clearRect(0, 0, prCanvas.width, prCanvas.height);
-        drawLine(
-          {
-            x1: startDrawXRef.current - offX,
-            y1: startDrawYRef.current - offY,
-            x2: e.clientX,
-            y2: e.clientY,
-          },
-          prCanvas
-        );
+        if (tool === "Line") {
+          shapeRef.current = {
+            name: "Line",
+            properties: {
+              x1: startDrawXRef.current,
+              y1: startDrawYRef.current,
+              x2: e.clientX + offX,
+              y2: e.clientY + offY,
+            },
+          } as shape;
+        } else if (tool === "Rectangle") {
+          shapeRef.current = {
+            name: "Rectangle",
+            properties: {
+              x: startDrawXRef.current,
+              y: startDrawYRef.current,
+              width: e.clientX + offX - startDrawXRef.current,
+              height: e.clientY + offY - startDrawYRef.current,
+            },
+          } as shape;
+        }
+        if (shapeRef.current) {
+          drawElements([shapeRef.current], prCanvas, offX, offY);
+        }
       }
     };
 
     const handleMouseUp = () => {
-      console.log("HEHE3");
       isDrawingRef.current = false;
-      const el: shape = {
-        name: "line",
-        properties: {
-          x1: startDrawXRef.current,
-          y1: startDrawYRef.current,
-          x2: endDrawXRef.current,
-          y2: endDrawYRef.current,
-          options: {
-            strokeWidth: 5,
-            stroke: "white",
-          },
-        },
-      };
-      setElements((prevElements) => [...prevElements, el]);
+      if (shapeRef.current) {
+        setElements([...element, shapeRef.current]);
+        shapeRef.current = null;
+      }
       prCanvas
         .getContext("2d")
         ?.clearRect(0, 0, prCanvas.width, prCanvas.height);
@@ -97,7 +99,7 @@ function useDraw() {
       prCanvas.removeEventListener("mousedown", handleMouseDown);
       prCanvas.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [prCanvas, selectedTool, offX, offY]);
+  }, [prCanvas, selectedTool, offX, offY, element, tool]);
 
   return { element };
 }

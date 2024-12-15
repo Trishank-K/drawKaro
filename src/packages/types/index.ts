@@ -22,7 +22,7 @@ interface Rectangle {
 }
 
 interface shape {
-    name: "line" | "rectangle",
+    name: "Line" | "Rectangle",
     properties: Line | Rectangle
 }
 

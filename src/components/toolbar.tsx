@@ -9,10 +9,10 @@ export default function Toolbar() {
         <div
           key={index}
           onClick={() => {
-            setTool(item.button);
+            setTool(item.figure);
           }}
           className={`relative flex items-center justify-center ${
-            tool === item.button ? "bg-slate-950" : "hover:bg-slate-700"
+            tool === item.figure ? "bg-slate-950" : "hover:bg-slate-700"
           } rounded-2xl p-2`}
         >
           <div className="text-2xl">{item.icon}</div>

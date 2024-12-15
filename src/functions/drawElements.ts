@@ -1,5 +1,6 @@
-import { Line, shape } from "@/packages/types";
+import { Line, Rectangle, shape } from "@/packages/types";
 import { drawLine } from "./drawLine";
+import { drawRectangle } from "./drawRectangle";
 
 const drawElements = (
   element: shape[],
@@ -9,18 +10,36 @@ const drawElements = (
 ) => {
   if (canvas) {
     element.forEach((element) => {
-      if (element.name === "line") {
-        const { x1, x2, y1, y2, options } = element.properties as Line;
-        drawLine(
+      switch (element.name) {
+        case "Line":
           {
-            x1: x1 - offX,
-            y1: y1 - offY,
-            x2: x2 - offX,
-            y2: y2 - offY,
-            options,
-          },
-          canvas
-        );
+            const { x1, x2, y1, y2, options } = element.properties as Line;
+            drawLine(
+              {
+                x1: x1 - offX,
+                y1: y1 - offY,
+                x2: x2 - offX,
+                y2: y2 - offY,
+                options,
+              },
+              canvas
+            );
+          }
+          break;
+        case "Rectangle": {
+          const { x, y, width, height, options } =
+            element.properties as Rectangle;
+          drawRectangle(
+            {
+              x: x - offX,
+              y: y - offY,
+              width,
+              height,
+              options,
+            },
+            canvas
+          );
+        } break;
       }
     });
   }

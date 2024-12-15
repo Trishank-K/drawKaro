@@ -20,7 +20,7 @@ const usePanning = () => {
   const selectedTool = useRecoilValue(toolState);
 
   useEffect(() => {
-    if (!prCanvas || selectedTool !== "H") return;
+    if (!prCanvas || selectedTool !== "Hand") return;
     const handleMouseDown = (e: MouseEvent) => {
       setDragging(true);
       setStartDragX(offX + e.clientX);
