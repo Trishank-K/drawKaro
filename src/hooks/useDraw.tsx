@@ -1,12 +1,13 @@
 import {
+  elements,
   finalCanvas,
   offsetX,
   offsetY,
   previewCanvas,
   toolState,
 } from "@/atoms/canvasAtoms";
-import { useEffect, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useEffect, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { shape } from "@/packages/types";
 import { drawElements } from "@/functions/drawElements";
 import { Point } from "roughjs/bin/geometry";
@@ -26,7 +27,7 @@ function useDraw() {
   const isDrawingRef = useRef(false);
   const shapeRef = useRef<shape | null>(null);
   const pointsRef = useRef<Point[] | null>(null);
-  const [element, setElements] = useState<shape[]>([]);
+  const [element, setElements] = useRecoilState(elements);
 
   useEffect(() => {
     if (finCanvas) {
@@ -38,7 +39,7 @@ function useDraw() {
   }, [offX, offY, element, finCanvas]);
 
   useEffect(() => {
-    if (!prCanvas || selectedTool === "Hand") return;
+    if (!prCanvas || selectedTool === "Hand" || selectedTool === "Pointer") return;
 
     const handleMouseDown = (e: MouseEvent) => {
       isDrawingRef.current = true;
@@ -58,6 +59,7 @@ function useDraw() {
           ?.clearRect(0, 0, prCanvas.width, prCanvas.height);
         if (tool === "Line") {
           shapeRef.current = {
+            id: element.length-1,
             name: "Line",
             properties: {
               x1: startDrawXRef.current,
@@ -68,6 +70,7 @@ function useDraw() {
           } as shape;
         } else if (tool === "Rectangle") {
           shapeRef.current = {
+            id: element.length-1,
             name: "Rectangle",
             properties: {
               x: startDrawXRef.current,
@@ -80,6 +83,7 @@ function useDraw() {
           if (pointsRef.current) {
             pointsRef.current.push([e.clientX + offX, e.clientY + offY]);
             shapeRef.current = {
+              id: element.length-1,
               name: "FreeStyle",
               properties: {
                 points: pointsRef.current,

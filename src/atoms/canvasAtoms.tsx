@@ -1,3 +1,4 @@
+import { shape } from "@/packages/types";
 import { atom } from "recoil";
 
 const backgroundCanvas = atom<HTMLCanvasElement | null>({
@@ -12,6 +13,10 @@ const finalCanvas = atom<HTMLCanvasElement | null>({
   key: "fincanvas",
   default: null,
 });
+const elements = atom<shape[]>({
+  key: "elements",
+  default: []
+})
 const toolState = atom<number | string>({
   key: "tools",
   default: "H",
@@ -49,6 +54,7 @@ export {
   backgroundCanvas,
   previewCanvas,
   finalCanvas,
+  elements,
   toolState,
   offsetX,
   offsetY,

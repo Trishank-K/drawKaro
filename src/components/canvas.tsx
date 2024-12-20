@@ -11,6 +11,7 @@ import { drawGrid } from "@/functions/drawGrid";
 import { usePanning } from "@/hooks/usePanning";
 import { offsetX, offsetY } from "@/atoms/canvasAtoms";
 import { useDraw } from "@/hooks/useDraw";
+import { useMove } from "@/hooks/useMove";
 
 export default function Canvas() {
   const [bgCanvas, setBgCanvas] = useRecoilState(backgroundCanvas);
@@ -44,6 +45,7 @@ export default function Canvas() {
   
   useDraw();
   usePanning();
+  useMove();
 
   return (
     <div className="relative">

@@ -32,6 +32,7 @@ interface FreeStyle {
 }
 
 interface shape {
+    id: number,
     name: "Line" | "Rectangle" | "FreeStyle",
     properties: Line | Rectangle | FreeStyle
 }
